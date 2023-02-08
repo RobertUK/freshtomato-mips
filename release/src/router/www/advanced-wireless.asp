@@ -279,7 +279,7 @@ function init() {
 					value: nvram['wl'+u+'_antdiv'] },
 				{ title: 'Transmit Antenna', name: 'wl'+u+'_txant', type: 'select', options: [['3','Auto *'],['1','A'],['0','B']],
 					value: nvram['wl'+u+'_txant'] },
-				{ title: 'Transmit Power', name: 'wl'+u+'_txpwr', type: 'text', maxlen: 3, size: 5,
+				{ title: 'Transmit Power (default: 42, max for AC66U with BCM53125: 120 approx.)', name: 'wl'+u+'_txpwr', type: 'text', maxlen: 3, size: 5,
 					suffix: hp ?
 						' <small>mW (before amplification)<\/small>&nbsp;&nbsp;<small>(range: 5 - 251; default: 10)<\/small>' :
 						' <small>mW<\/small>&nbsp;&nbsp;<small>(range: 5 - 400, override regulatory and other limitations; use 0 for country default)<\/small>',

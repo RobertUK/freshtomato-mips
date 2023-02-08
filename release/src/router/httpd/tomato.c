@@ -1036,6 +1036,8 @@ static const nvset_t nvset_list[] = {
 	{ "log_events",			V_TEXT(0, 32)			},	/* "acre,crond,ntp" */
 	{ "log_dropdups",		V_01				},	/* drop duplicates? */
 	{ "log_min_level",		V_RANGE(1, 8)			},	/* minimum log level */
+	{ "log_process_list",	V_LENGTH(0,2048)	},
+
 
 /* admin-log-webmonitor */
 	{ "log_wm",			V_01				},
@@ -1698,11 +1700,11 @@ void exec_service(const char *action)
 {
 	int i;
 
-	logmsg(LOG_DEBUG, "*** [tomato] %s: exec_service: %s", __FUNCTION__, action);
+	logmsg(LOG_WARNING, "*** [tomato] %s: exec_service: %s", __FUNCTION__, action);
 
 	i = 10;
 	while ((!nvram_match("action_service", "")) && (i-- > 0)) {
-		logmsg(LOG_DEBUG, "*** [tomato] %s: waiting before %d", __FUNCTION__, i);
+		logmsg(LOG_WARNING, "*** [tomato] %s: waiting before %d", __FUNCTION__, i);
 		sleep(1);
 	}
 
@@ -1711,7 +1713,7 @@ void exec_service(const char *action)
 
 	i = 3;
 	while ((nvram_match("action_service", (char *)action)) && (i-- > 0)) {
-		logmsg(LOG_DEBUG, "*** [tomato] %s: waiting after %d", __FUNCTION__, i);
+		logmsg(LOG_WARNING, "*** [tomato] %s: waiting after %d", __FUNCTION__, i);
 		sleep(1);
 	}
 
@@ -1719,7 +1721,7 @@ void exec_service(const char *action)
 	if (atoi(webcgi_safeget("_service_wait", ""))) {
 		i = 10;
 		while ((nvram_match("action_service", (char *)action)) && (i-- > 0))  {
-			logmsg(LOG_DEBUG, "*** [tomato] %s: waiting after %d", __FUNCTION__, i);
+			logmsg(LOG_WARNING, "*** [tomato] %s: waiting after %d", __FUNCTION__, i);
 			sleep(1);
 		}
 	}
@@ -2025,7 +2027,7 @@ static int webcgi_nvram_set(const nvset_t *v, const char *name, int write)
 	if ((p = webcgi_get((char*)name)) == NULL)
 		return 0;
 
-	logmsg(LOG_DEBUG, "*** [tomato] %s: [%s] %s=%s", __FUNCTION__, v->name, (char*)name, p);
+	logmsg(LOG_WARNING, "*** [tomato] %s: [%s] %s=%s", __FUNCTION__, v->name, (char*)name, p);
 
 	dirty = 0;
 	ok = 1;
@@ -2076,7 +2078,7 @@ static int webcgi_nvram_set(const nvset_t *v, const char *name, int write)
 			if (v->vtype != VT_TEMP)
 				dirty = 1;
 
-			// logmsg(LOG_DEBUG, "*** [tomato] %s: nvram set %s=%s", __FUNCTION__, name, p);
+			// logmsg(LOG_WARNING, "*** [tomato] %s: nvram set %s=%s", __FUNCTION__, name, p);
 			nvram_set(name, p);
 		}
 	}
@@ -2217,7 +2219,7 @@ static int save_variables(int write)
 			}
 			if ((write) && (!nvram_match(s, p))) {
 				dirty = 1;
-				// logmsg(LOG_DEBUG, "*** [tomato] %s: nvram set %s=%s", __FUNCTION__, s, p);
+				// logmsg(LOG_WARNING, "*** [tomato] %s: nvram set %s=%s", __FUNCTION__, s, p);
 				nvram_set(s, p);
 			}
 		}
@@ -2272,7 +2274,7 @@ static void wo_tomato(char *url)
 	}
 
 	if (commit || force_commit) {
-		logmsg(LOG_DEBUG, "*** [tomato] %s: commit from tomato.cgi", __FUNCTION__);
+		logmsg(LOG_WARNING, "*** [tomato] %s: commit from tomato.cgi", __FUNCTION__);
 		nvram_commit_x();
 	}
 

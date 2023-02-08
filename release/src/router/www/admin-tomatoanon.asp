@@ -68,6 +68,14 @@ function init() {
 
 <div class="section-title">TomatoAnon</div>
 <div class="section">
+	<div id='notice' class="warning">
+		<h1>Big Warning!</h1>
+		This is disabled by default in my build <a href="https://github.com/RobertUK/freshtomato-mips" target="_blank">build</a> as it only needs to run once to broadcast sensitive information
+		that can be used for identification which leads to the usual undesirables like hacking. It is a very severe security violation but if you want to enable, go ahead but make sure you understand what it does please!
+		I left the rest of this page as is so as to disturb as little code as possible, but an hash (MD5) of anything these days can be figured out with the right tools, like those included in 
+		<a href="https://www.kali.org/" target="_blank">Kali Linux</a>. The info below must be older than me!! Anything hashed and cracked is typically made available online unfortunately.
+	</div>
+
 	<div class="about">
 		The script sends (to the database) information about the router model and the installed version of Tomato.<br>
 		The information submitted is 100% anonymous and will be used ONLY for statistical purposes.<br>

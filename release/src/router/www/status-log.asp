@@ -18,7 +18,11 @@
 
 <script>
 
-//	<% nvram("log_file"); %>
+	// <% nv("log_file,log_process_list"); %>
+
+
+	//todo: use existing nvram var log_process_list, only discovered this today 08 Feb 2023!
+
 
 var cprefix = 'status_log';
 
@@ -31,6 +35,7 @@ var messages;
 var entriesMode = 0;
 var entriesLast = -1;
 var time = '';
+var currentProcessFilter  = '';
 
 var LINE_PARSE_MAP_DATE_POS = 0;
 var LINE_PARSE_MAP_FACILITY_POS = 1;
@@ -41,22 +46,42 @@ var LINE_PARSE_MAP_LEVEL_MESSAGE_POS = 5;
 
 var ref = new TomatoRefresh('update.cgi', 'exec=showlog', 5, 'status_log');
 
+
+
+//var filterProcessSelector = E('filterProcessSelector');
+
+
+
+
+window.onload=
 ref.refresh = function(text) {
 	try {
+		//get the syslog process list from nvram and create the options for it.
+		var filterProcessSelector = document.getElementById("filterProcessSelector");
 		messages = text.split('\n');
 		if (!currentlyScrolling) {
 			var willScroll = false;
 			var tableDiv = E('log-table');
 			if (tableDiv.offsetHeight + tableDiv.scrollTop >= tableDiv.scrollHeight)
-				willScroll = true;
+				willScroll = true;			
+
+			var log_process_list = nvram.log_process_list.split(/\n/);
+			for (var i = 0; i < log_process_list.length; ++i) {
+					let option = document.createElement("option");
+					option.value =log_process_list[i]
+					option.innerHTML =  log_process_list[i]
+					filterProcessSelector.appendChild(new Option(log_process_list[i], log_process_list[i]));
+				}
+			}
 
 			logGrid.populate();
 
 			if (willScroll)
 				scrollToBottom();
-		}
+		
 	}
 	catch (ex) {
+		console.log(ex);
 	}
 }
 
@@ -99,12 +124,18 @@ logGrid.populate = function() {
 				negativeSearch = 0;
 		}
 
+		var currentProcessFilterSearch;
+		if (currentProcessFilter) {
+			currentProcessFilterSearch = currentProcessFilter;			
+		}
+
 		var count = 0;
 		for (var index = 0; index < messagesToAdd.length; ++index) {
 			if (messagesToAdd[index]) {
 				var logLineMap = getLogLineParsedMap(messagesToAdd[index]);
+				var logLineProcess =  logLineMap[LINE_PARSE_MAP_LEVEL_PROCESS_POS]
 				if ((currentFilterValue == 0) || (E('maxlevel').checked ? (currentFilterValue >= logLineMap[LINE_PARSE_MAP_LEVEL_ATTR_POS][1]) : (currentFilterValue == logLineMap[LINE_PARSE_MAP_LEVEL_ATTR_POS][1]))) {
-						if (!localSearch || containsSearch(logLineMap, localSearch)) {
+						if ((!localSearch ||  containsSearch(logLineMap, localSearch)) && (!currentProcessFilterSearch   || (logLineProcess.includes(currentProcessFilterSearch)))) {
 							var row = createHighlightedRow(logLineMap);
 							this.insert(-1, row, row, true);
 							count++;
@@ -285,6 +316,14 @@ function filterLevelChanged() {
 	scrollToBottom();
 }
 
+function processFilterChanged() {
+	var filterSelector = E('filterProcessSelector');
+	currentProcessFilter =filterProcessSelector.options[filterProcessSelector.selectedIndex].value == "-1" ? undefined : filterProcessSelector.options[filterProcessSelector.selectedIndex].value ;
+	logGrid.populate();
+	filterSelector.blur();
+	scrollToBottom();
+}
+
 function scrollToBottom() {
 	var objDiv = E('log-table');
 	objDiv.scrollTop = objDiv.scrollHeight;
@@ -436,6 +475,14 @@ function init() {
 					<option value="6">Notice</option>
 					<option value="7">Info</option>
 					<option value="8">Debug</option>
+				</select>
+			</span>
+			&nbsp; &nbsp;
+			<span >
+				Process: &nbsp;
+				<small class="maxlevel">Max</small>&nbsp;<input type="checkbox" id="maxlevel2" onchange="logGrid.populate();scrollToBottom();">&nbsp;
+				<select  id="filterProcessSelector" onchange="processFilterChanged();">
+					<option value="">-</option>
 				</select>
 			</span>
 			&nbsp; &nbsp;

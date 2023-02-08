@@ -44,10 +44,12 @@ const defaults_t defaults[] = {
 	{ "lan_hwnames",		""				},	// LAN driver names (e.g. et0)
 	{ "lan_hwaddr",			""				},	// LAN interface MAC address
 
+	{ "cpu_info",			""				},	// LAN interface MAC address
+
 	/* LAN TCP/IP parameters */
 	{ "lan_dhcp",			"0"				},	/* DHCP client [0|1] - obtain a LAN (br0) IP via DHCP */
 	{ "lan_proto",			"dhcp"				},	// DHCP server [static|dhcp]
-	{ "lan_ipaddr",			"192.168.1.1"			},	// LAN IP address
+	{ "lan_ipaddr",			"192.168.0.1"			},	// LAN IP address
 	{ "lan_netmask",		"255.255.255.0"			},	// LAN netmask
 	{ "lan_wins",			""				},	// x.x.x.x x.x.x.x ...
 	{ "lan_domain",			""				},	// LAN domain name
@@ -368,8 +370,8 @@ const defaults_t defaults[] = {
 	{ "wl_corerev",			""				},	// Current core revision
 	{ "wl_phytypes",		""				},	// List of supported wireless bands (e.g. "ga")
 	{ "wl_radioids",		""				},	// List of radio IDs
-	{ "wl_ssid",			"FreshTomato24"			},	// Service set ID (network name)
-	{ "wl1_ssid",			"FreshTomato50"			},
+	{ "wl_ssid",			"Splendid24"			},	// Service set ID (network name)
+	{ "wl1_ssid",			"Splendid50"			},
 	{ "wl_country_code",		""				},	// Country (default obtained from driver)
 	{ "wl_country_rev",		""				},	/* Regrev Code (default obtained from driver) */
 	{ "wl_radio",			"1"				},	// Enable (1) or disable (0) radio
@@ -580,7 +582,7 @@ const defaults_t defaults[] = {
 	{ "ddnsx_refresh",		"28"				},
 
 /* basic-ident */
-	{ "router_name",		"FreshTomato"			},
+	{ "router_name",		"Splendid"			},
 	{ "wan_hostname",		"unknown"			},
 	{ "wan_domain",			""				},
 
@@ -746,7 +748,7 @@ const defaults_t defaults[] = {
 	{ "portforward",		""				},
 	{ "trigforward",		""				},
 #else
-	{ "portforward",		"0<3<1.1.1.0/24<1000:2000<<192.168.1.2<ex: 1000 to 2000, restricted>0<2<<1000,2000<<192.168.1.2<ex: 1000 and 2000>0<1<<1000<2000<192.168.1.2<ex: different internal port>0<3<<1000:2000,3000<<192.168.1.2<ex: 1000 to 2000, and 3000>" },
+	{ "portforward",		"0<3<1.1.1.0/24<1000:2000<<192.168.0.2<ex: 1000 to 2000, restricted>0<2<<1000,2000<<192.168.0.2<ex: 1000 and 2000>0<1<<1000<2000<192.168.0.2<ex: different internal port>0<3<<1000:2000,3000<<192.168.0.2<ex: 1000 to 2000, and 3000>" },
 	{ "trigforward",		"0<1<3000:4000<5000:6000<ex: open 5000-6000 if 3000-4000>"	},
 #endif
 #ifdef TCONFIG_IPV6
@@ -935,6 +937,7 @@ const defaults_t defaults[] = {
 	{ "log_file_size",		"50"				},
 	{ "log_file_keep",		"1"				},
 	{ "log_limit",			"60"				},
+	{ "log_process_list",		""				},
 	{ "log_in",			"0"				},
 	{ "log_out",			"0"				},
 	{ "log_mark",			"60"				},
@@ -974,8 +977,8 @@ const defaults_t defaults[] = {
 	{ "jffs2_auto_unmount",		"0"				},	/* automatically unmount JFFS2 during FW upgrade */
 
 /* admin-tomatoanon */
-	{ "tomatoanon_enable",		"-1"				},
-	{ "tomatoanon_answer",		"0"				},
+	{ "tomatoanon_enable",		"0"				},
+	{ "tomatoanon_answer",		"1"				},
 	{ "tomatoanon_id",		""				},
 	{ "tomatoanon_notify",		"1"				},
 
@@ -1146,8 +1149,8 @@ const defaults_t defaults[] = {
 #endif
 	{ "vpn_server1_digest",		"default"			},
 	{ "vpn_server1_dhcp",		"1"				},
-	{ "vpn_server1_r1",		"192.168.1.50"			},
-	{ "vpn_server1_r2",		"192.168.1.55"			},
+	{ "vpn_server1_r1",		"192.168.0.50"			},
+	{ "vpn_server1_r2",		"192.168.0.55"			},
 	{ "vpn_server1_sn",		"10.6.0.0"			},
 	{ "vpn_server1_nm",		"255.255.255.0"			},
 	{ "vpn_server1_local",		"10.6.0.1"			},
@@ -1194,8 +1197,8 @@ const defaults_t defaults[] = {
 #endif
 	{ "vpn_server2_digest",		"default"			},
 	{ "vpn_server2_dhcp",		"1"				},
-	{ "vpn_server2_r1",		"192.168.1.50"			},
-	{ "vpn_server2_r2",		"192.168.1.55"			},
+	{ "vpn_server2_r1",		"192.168.0.50"			},
+	{ "vpn_server2_r2",		"192.168.0.55"			},
 	{ "vpn_server2_sn",		"10.7.0.0"			},
 	{ "vpn_server2_nm",		"255.255.255.0"			},
 	{ "vpn_server2_local",		"10.7.0.1"			},
@@ -1429,7 +1432,7 @@ const defaults_t defaults[] = {
 #ifdef TCONFIG_NOCAT
 	{ "NC_enable",			"0"				},	// enable NoCatSplash
 	{ "NC_Verbosity",		"2"				},
-	{ "NC_GatewayName",		"FreshTomato Captive Portal"	},
+	{ "NC_GatewayName",		"A Splendid Captive Portal"	},
 	{ "NC_GatewayPort",		"5280"				},
 	{ "NC_GatewayMode",		"Open"				},
 	{ "NC_DocumentRoot",		"/tmp/splashd"			},
@@ -1453,7 +1456,7 @@ const defaults_t defaults[] = {
 	{"nginx_docroot",		"/www"				},	// path for server files
 	{"nginx_port",			"85"				},	// port to listen
 	{"nginx_remote",		"0"				},	// open port from WAN site
-	{"nginx_fqdn",			"FreshTomato"			},	/* server name */
+	{"nginx_fqdn",			"Splendid"			},	/* server name */
 	{"nginx_upload",		"100"				},	// upload file size limit
 	{"nginx_priority",		"10"				},	// server priority = worker_priority
 	{"nginx_custom",		""				},	// additional lines for nginx.conf
@@ -1503,7 +1506,7 @@ const defaults_t defaults[] = {
 	{ "tor_dnsport",		"9053"				},
 	{ "tor_datadir",		"/tmp/tor"			},
 	{ "tor_iface",			"br0"				},
-	{ "tor_users",			"192.168.1.0/24"		},
+	{ "tor_users",			"192.168.0.0/24"		},
 	{ "tor_custom",			""				},
 	{ "tor_ports",			"80"				},
 	{ "tor_ports_custom",		"80,443,8080:8880"		},
